@@ -82,31 +82,31 @@ $exception.scopedname$::$exception.name$()
 }
 
 $exception.scopedname$::$exception.name$(
-        const $exception.name$& x)
-    : UserException(x)
+        const $exception.name$& _x)
+    : UserException(_x)
 {
     $exception.members : { member |$member_copy(ctx=ctx, member=member)$}; separator="\n"$
 }
 
 $exception.scopedname$::$exception.name$(
-        $exception.name$&& x)
-    : UserException(std::move(x))
+        $exception.name$&& _x)
+    : UserException(std::move(_x))
 {
     $exception.members : { member |$member_move(member=member)$}; separator="\n"$
 }
 
 $exception.scopedname$& $exception.scopedname$::operator =(
-        const $exception.name$& x)
+        const $exception.name$& _x)
 {
-	UserException::operator =(x);
+	UserException::operator =(_x);
     $exception.members : { member |$member_copy(ctx=ctx, member=member)$}; separator="\n"$
 	return *this;
 }
 
 $exception.scopedname$& $exception.scopedname$::operator =(
-        $exception.name$&& x)
+        $exception.name$&& _x)
 {
-	UserException::operator =(std::move(x));
+	UserException::operator =(std::move(_x));
 	$exception.members : { member |$member_move(member=member)$}; separator="\n"$
 	return *this;
 }
@@ -227,23 +227,23 @@ $struct.scopedname$::~$struct.name$()
 }
 
 $struct.scopedname$::$struct.name$(
-        const $struct.name$& x)$if(struct.inheritances)$
+        const $struct.name$& _x)$if(struct.inheritances)$
     : $struct.inheritances : {$struct_inherit_copy_init(it)$}; separator=",\n"$ $endif$
 {
     $struct.members:{$member_copy(ctx=ctx, member=it)$}; separator="\n"$
 }
 
 $struct.scopedname$::$struct.name$(
-        $struct.name$&& x)$if(struct.inheritances)$
+        $struct.name$&& _x)$if(struct.inheritances)$
     : $struct.inheritances : {$struct_inherit_move_init(it)$}; separator=",\n"$ $endif$
 {
     $struct.members:{$member_move(member=it)$}; separator="\n"$
 }
 
 $struct.scopedname$& $struct.scopedname$::operator =(
-        const $struct.name$& x)
+        const $struct.name$& _x)
 {
-    $if(struct.inheritances)$    $struct.inheritances : {$it.scopedname$::operator =(x);}; separator="\n"$ $endif$
+    $if(struct.inheritances)$    $struct.inheritances : {$it.scopedname$::operator =(_x);}; separator="\n"$ $endif$
 
     $struct.members:{$member_copy(ctx=ctx, member=it)$}; separator="\n"$
 
@@ -251,9 +251,9 @@ $struct.scopedname$& $struct.scopedname$::operator =(
 }
 
 $struct.scopedname$& $struct.scopedname$::operator =(
-        $struct.name$&& x)
+        $struct.name$&& _x)
 {
-    $if(struct.inheritances)$    $struct.inheritances : {$it.scopedname$::operator =(std::move(x));}; separator="\n"$ $endif$
+    $if(struct.inheritances)$    $struct.inheritances : {$it.scopedname$::operator =(std::move(_x));}; separator="\n"$ $endif$
 
     $struct.members:{$member_move(member=it)$}; separator="\n"$
 
@@ -295,7 +295,7 @@ void $struct.scopedname$::serialize(
 {
     $if(struct.inheritances)$    $struct.inheritances : {$it.scopedname$::serialize(scdr);}; separator="\n"$ $endif$
 
-    $struct.members : { member |$if(!member.annotationNonSerialized)$$object_serialization(ctx=ctx, object=member, preffix="m_")$$endif$}; separator=""$
+    $struct.members : { member |$if(!member.annotationNonSerialized)$$object_serialization(ctx=ctx, object=member, preffix="")$$endif$}; separator=""$
 }
 
 void $struct.scopedname$::deserialize(
@@ -303,7 +303,7 @@ void $struct.scopedname$::deserialize(
 {
     $if(struct.inheritances)$    $struct.inheritances : {$it.scopedname$::deserialize(dcdr);}; separator="\n"$ $endif$
 
-    $struct.members : { member |$if(!member.annotationNonSerialized)$$object_deserialization(ctx=ctx, object=member, preffix="m_")$$endif$}; separator="\n"$
+    $struct.members : { member |$if(!member.annotationNonSerialized)$$object_deserialization(ctx=ctx, object=member, preffix="")$$endif$}; separator="\n"$
 }
 
 $endif$
@@ -314,7 +314,7 @@ void $struct.scopedname$::serialize(
 {
     $if(struct.inheritances)$    $struct.inheritances : {$it.scopedname$::serialize(scdr);}; separator="\n"$ $endif$
 
-    $struct.members : { member |$if(!member.annotationNonSerialized)$$object_serialization(ctx=ctx, object=member, preffix="m_")$$endif$}; separator=""$
+    $struct.members : { member |$if(!member.annotationNonSerialized)$$object_serialization(ctx=ctx, object=member, preffix="")$$endif$}; separator=""$
 }
 
 void $struct.scopedname$::deserialize(
@@ -322,12 +322,11 @@ void $struct.scopedname$::deserialize(
 {
     $if(struct.inheritances)$    $struct.inheritances : {$it.scopedname$::deserialize(dcdr);}; separator="\n"$ $endif$
 
-    $struct.members : { member |$if(!member.annotationNonSerialized)$$object_deserialization(ctx=ctx, object=member, preffix="m_")$$endif$}; separator="\n"$
+    $struct.members : { member |$if(!member.annotationNonSerialized)$$object_deserialization(ctx=ctx, object=member, preffix="")$$endif$}; separator="\n"$
 }
 
 $endif$
 
-$struct.members:{$public_member_declaration(class=struct.scopedname, member=it)$}; separator="\n"$
 
 $extensions : {$it$}; separator="\n"$
 >>
@@ -347,35 +346,35 @@ $bitset.scopedname$::~$bitset.name$()
 }
 
 $bitset.scopedname$::$bitset.name$(
-        const $bitset.name$& x)$if(bitset.parents)$
+        const $bitset.name$& _x)$if(bitset.parents)$
     : $bitset.parents : {$bitset_inherit_copy_init(it)$}; separator=",\n"$ $endif$
 {
-    m_bitset = x.m_bitset;
+    m_bitset = _x.m_bitset;
 }
 
 $bitset.scopedname$::$bitset.name$(
-        $bitset.name$&& x)$if(bitset.parents)$
+        $bitset.name$&& _x)$if(bitset.parents)$
     : $bitset.parents : {$bitset_inherit_move_init(it)$}; separator=",\n"$ $endif$
 {
-    m_bitset = x.m_bitset;
+    m_bitset = _x.m_bitset;
 }
 
 $bitset.scopedname$& $bitset.scopedname$::operator =(
-        const $bitset.name$& x)
+        const $bitset.name$& _x)
 {
-    $if(bitset.parents)$    $bitset.parents : {$it.scopedname$::operator =(x);}; separator="\n"$ $endif$
+    $if(bitset.parents)$    $bitset.parents : {$it.scopedname$::operator =(_x);}; separator="\n"$ $endif$
 
-    m_bitset = x.m_bitset;
+    m_bitset = _x.m_bitset;
 
     return *this;
 }
 
 $bitset.scopedname$& $bitset.scopedname$::operator =(
-        $bitset.name$&& x)
+        $bitset.name$&& _x)
 {
-    $if(bitset.parents)$    $bitset.parents : {$it.scopedname$::operator =(std::move(x));}; separator="\n"$ $endif$
+    $if(bitset.parents)$    $bitset.parents : {$it.scopedname$::operator =(std::move(_x));}; separator="\n"$ $endif$
 
-    m_bitset = x.m_bitset;
+    m_bitset = _x.m_bitset;
 
     return *this;
 }
@@ -506,9 +505,9 @@ $union.scopedname$::~$union.name$()
 }
 
 $union.scopedname$::$union.name$(
-        const $union.name$& x)
+        const $union.name$& _x)
 {
-    m__d = x.m__d;
+    m__d = _x.m__d;
 
     switch(m__d)
     {
@@ -518,9 +517,9 @@ $union.scopedname$::$union.name$(
 }
 
 $union.scopedname$::$union.name$(
-        $union.name$&& x)
+        $union.name$&& _x)
 {
-    m__d = x.m__d;
+    m__d = _x.m__d;
 
     switch(m__d)
     {
@@ -530,9 +529,9 @@ $union.scopedname$::$union.name$(
 }
 
 $union.scopedname$& $union.scopedname$::operator =(
-        const $union.name$& x)
+        const $union.name$& _x)
 {
-    m__d = x.m__d;
+    m__d = _x.m__d;
 
     switch(m__d)
     {
@@ -544,9 +543,9 @@ $union.scopedname$& $union.scopedname$::operator =(
 }
 
 $union.scopedname$& $union.scopedname$::operator =(
-        $union.name$&& x)
+        $union.name$&& _x)
 {
-    m__d = x.m__d;
+    m__d = _x.m__d;
 
     switch(m__d)
     {
@@ -877,30 +876,30 @@ $endif$
 
 member_copy(ctx, member) ::= <<
 $if(member.typecode.forwarded)$
-m_$member.name$ = new $member.typecode.cppTypename$();
-*m_$member.name$ = *x.m_$member.name$;
+$member.name$ = new $member.typecode.cppTypename$();
+*$member.name$ = *_x.$member.name$;
 $elseif(ctx.generateTypesC)$
 $if(member.typecode.isStringType)$
-free(m_$member.name$);
-m_$member.name$ = (char*)malloc(sizeof(char) * (strlen(x.m_$member.name$) + 1));
-strncpy(m_$member.name$, x.m_$member.name$, strlen(x.m_$member.name$) + 1);
+free($member.name$);
+$member.name$ = (char*)malloc(sizeof(char) * (strlen(_x.$member.name$) + 1));
+strncpy($member.name$, _x.$member.name$, strlen(_x.$member.name$) + 1);
 $else$
-m_$member.name$ = x.m_$member.name$;
+$member.name$ = _x.$member.name$;
 $endif$
 $else$
-m_$member.name$ = x.m_$member.name$;
+$member.name$ = _x.$member.name$;
 $endif$
 >>
 
 member_move(member) ::= <<
 $if(member.typecode.primitive)$
-m_$member.name$ = x.m_$member.name$;
+$member.name$ = _x.$member.name$;
 $else$
 $if(member.typecode.forwarded)$
-m_$member.name$ = x.m_$member.name$;
-x.m_$member.name$ = nullptr;
+$member.name$ = _x.$member.name$;
+_x.$member.name$ = nullptr;
 $else$
-m_$member.name$ = std::move(x.m_$member.name$);
+$member.name$ = std::move(_x.$member.name$);
 $endif$
 $endif$
 >>
@@ -936,7 +935,7 @@ $endif$
 unionmember_copy(member) ::= <<
 $if(member.labels)$
 $member.labels:{case $it$:}; separator="\n"$
-m_$member.name$ = x.m_$member.name$;
+m_$member.name$ = _x.m_$member.name$;
 break;
 $endif$
 >>
@@ -945,7 +944,7 @@ unionmemberdefault_copy(member) ::= <<
 default:
 $if(member)$
 $if(member.default)$
-m_$member.name$ = x.m_$member.name$;
+m_$member.name$ = _x.m_$member.name$;
 $endif$
 $endif$
 
@@ -956,9 +955,9 @@ unionmember_move(member) ::= <<
 $if(member.labels)$
 $member.labels:{case $it$:}; separator="\n"$
 $if(member.typecode.primitive)$
-m_$member.name$ = x.m_$member.name$;
+m_$member.name$ = _x.m_$member.name$;
 $else$
-m_$member.name$ = std::move(x.m_$member.name$);
+m_$member.name$ = std::move(_x.m_$member.name$);
 $endif$
 
 break;
@@ -970,9 +969,9 @@ default:
 $if(member)$
 $if(member.default)$
 $if(member.typecode.primitive)$
-m_$member.name$ = x.m_$member.name$;
+m_$member.name$ = _x.m_$member.name$;
 $else$
-m_$member.name$ = std::move(x.m_$member.name$);
+m_$member.name$ = std::move(_x.m_$member.name$);
 $endif$
 $endif$
 $endif$

@@ -269,10 +269,6 @@ public:
     $serialization_functions(struct)$
 
     $extensions : {$it$}; separator="\n"$
-
-private:
-
-    $struct.members:{$private_member_declaration(member=it)$}; separator="\n"$
 };
 >>
 
@@ -463,67 +459,11 @@ $endif$
 >>
 
 public_member_primitive_declaration(member) ::= <<
-/*!
- * @brief This function sets a value in member $member.name$
- * @param _$member.name$ New value for member $member.name$
- */
-eProsima_user_DllExport void $member.name$(
-        $member.typecode.cppTypename$ _$member.name$);
-
-/*!
- * @brief This function returns the value of member $member.name$
- * @return Value of member $member.name$
- */
-eProsima_user_DllExport $member.typecode.cppTypename$ $member.name$() const;
-
-/*!
- * @brief This function returns a reference to member $member.name$
- * @return Reference to member $member.name$
- */
-eProsima_user_DllExport $member.typecode.cppTypename$& $member.name$();
->>
-
-public_member_cstring_declaration(member) ::= <<
-/*!
- * @brief This function sets a value in member $member.name$
- * @param _$member.name$ New value for member $member.name$
- */
-eProsima_user_DllExport void $member.name$(
-        const $member.typecode.cppTypename$ _$member.name$);
-
-/*!
- * @brief This function returns the value of member $member.name$
- * @return Value of member $member.name$
- */
-eProsima_user_DllExport const $member.typecode.cppTypename$ $member.name$() const;
+$member.typecode.cppTypename$ $member.name$;
 >>
 
 public_member_common_declaration(member) ::= <<
-/*!
- * @brief This function copies the value in member $member.name$
- * @param _$member.name$ New value to be copied in member $member.name$
- */
-eProsima_user_DllExport void $member.name$(
-        const $member.typecode.cppTypename$& _$member.name$);
-
-/*!
- * @brief This function moves the value in member $member.name$
- * @param _$member.name$ New value to be moved in member $member.name$
- */
-eProsima_user_DllExport void $member.name$(
-        $member.typecode.cppTypename$&& _$member.name$);
-
-/*!
- * @brief This function returns a constant reference to member $member.name$
- * @return Constant reference to member $member.name$
- */
-eProsima_user_DllExport const $member.typecode.cppTypename$& $member.name$() const;
-
-/*!
- * @brief This function returns a reference to member $member.name$
- * @return Reference to member $member.name$
- */
-eProsima_user_DllExport $member.typecode.cppTypename$& $member.name$();
+$member.typecode.cppTypename$ $member.name$;
 >>
 
 public_bitfield_declaration(member) ::= <<
@@ -631,7 +571,7 @@ eProsima_user_DllExport $member.typecode.cppTypename$& $member.name$();
 >>
 
 private_declaration(typecode, name) ::= <<
-$typecode.cppTypename$$if(typecode.forwarded)$*$endif$ m_$name$;
+$typecode.cppTypename$$if(typecode.forwarded)$*$endif$ $name$;
 >>
 
 
